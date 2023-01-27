@@ -1,8 +1,10 @@
 import { Component, ViewChild} from '@angular/core';
 import { MatTable } from '@angular/material/table';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { FacrureFormDialogComponent } from './facrure-form-dialog/facrure-form-dialog.component';
 import { columns } from '../tools/columns';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,11 @@ export class AppComponent {
   displayedColumns: string[] = ['position', 'agence', 'dateFacture', 'numeroFacture', 'dateReception' , 'montantHT', 'TVA','montantRist',
   'montantNet','montantBrut','SHP','montantPPA','fournisseurs','bordreauxNumber','marge','echeance', 'delete'];
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.addSvgIcon(
+			'delete',
+			sanitizer.bypassSecurityTrustResourceUrl('assets/delete.svg'));
+  }
 
   @ViewChild(MatTable) table: MatTable<Facturation>;
   
