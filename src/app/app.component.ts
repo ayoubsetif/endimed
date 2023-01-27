@@ -5,6 +5,9 @@ import { FacrureFormDialogComponent } from './facrure-form-dialog/facrure-form-d
 import { columns } from '../tools/columns';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+//import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +17,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 export class AppComponent {
   columns = columns;
   invoice: any = [];
-  dataSource: Facturation[] = [];
+  dataSource: any = [];
 
   displayedColumns: string[] = ['position', 'agence', 'dateFacture', 'numeroFacture', 'dateReception' , 'montantHT', 'TVA','montantRist',
   'montantNet','montantBrut','SHP','montantPPA','fournisseurs','bordreauxNumber','marge','echeance', 'delete'];
@@ -26,17 +29,20 @@ export class AppComponent {
   }
 
   @ViewChild(MatTable) table: MatTable<Facturation>;
-  
+  @ViewChild(MatSort) sort: MatSort;
+
   ngOnInit() {
-    //console.log('test', JSON.parse(localStorage.getItem('config') as any) )
-    this.dataSource =  JSON.parse(localStorage.getItem('config') as any);
+    this.dataSource = new MatTableDataSource(JSON.parse(localStorage.getItem('config') as any))
     if(JSON.parse(localStorage.getItem('config') as any)) {
       this.invoice = JSON.parse(localStorage.getItem('config') as any);
     } else {
       this.invoice = [];
     }
-    console.log('ttt', this.invoice)
 	}
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(FacrureFormDialogComponent);
@@ -45,7 +51,8 @@ export class AppComponent {
       console.log('The dialog was closed', result);
       if (result) {
         this.invoice.push(result)
-        this.dataSource = this.invoice;
+        //this.dataSource = this.invoice;
+        this.dataSource = new MatTableDataSource(this.invoice)
         localStorage.setItem('config', JSON.stringify(this.invoice));
       
         this.table.renderRows();
@@ -54,9 +61,11 @@ export class AppComponent {
   }
 
   delete(index: any) {
+    console.log('index', index)
     this.invoice.splice(index, 1);
     localStorage.setItem('config', JSON.stringify(this.invoice));
-    this.dataSource = this.invoice;
+    //this.dataSource = this.invoice;
+    this.dataSource = new MatTableDataSource(this.invoice)
     this.table.renderRows();
   }
 
