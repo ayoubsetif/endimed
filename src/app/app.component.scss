@@ -1,3 +1,20 @@
 table {
     width: 100%;
 }
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    border-width: 0.1px;
+    border-style: solid;
+    border-color: rgba(0,0,0,.12);
+    text-align: center;
+}
+
+.en-footer {
+    background-color: #0909dd5c;
+    text-align: center;
+}
+
+.currency {
+    font-weight: 300;
+    font-size: 13px;
+}

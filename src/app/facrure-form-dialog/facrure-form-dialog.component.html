@@ -1,9 +1,9 @@
 <form [formGroup]="FacureForm">
-    <mat-form-field *ngFor="let item of columns" appearance="fill">
+    <mat-form-field *ngFor="let item of formOptions" appearance="fill">
       <mat-label>{{ item.name }}</mat-label>
-      <input [type]="item.type" matInput [formControlName]="item.id" required>
+      <input [type]="item.type" matInput [formControlName]="item.id" [required]="item.required">
     </mat-form-field>
   </form>
   
-  <button mat-raised-button type="submit" color="primary" [disabled]="FacureForm.invalid" [mat-dialog-close]="FacureForm.value" cdkFocusInitial>Ajouter</button>
+  <button mat-raised-button type="submit" color="primary" [disabled]="FacureForm.invalid" [mat-dialog-close]="save()">Ajouter</button>
   
