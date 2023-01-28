@@ -1,5 +1,14 @@
+<div class="logo-container">
+  <h1>المؤسسة الوطنية لتوزيع الأدوية بالتجزئة</h1>
+  <img src="../assets/logo.jpeg" alt="">
+</div>
 
-<button mat-raised-button type="submit" color="primary" (click)="openDialog()">Ajouter facture</button>
+<div class="btn-container">
+  <button mat-raised-button type="submit" color="primary" (click)="openDialog()">Ajouter facture</button>
+  <button mat-raised-button type="submit" color="primary" (click)="download()">Télécharger en Excel</button>
+</div>
+
+
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 

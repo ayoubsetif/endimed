@@ -18,3 +18,29 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
     font-weight: 300;
     font-size: 13px;
 }
+
+.mat-sort-header-container {
+    justify-content: center;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    img {
+        align-self: center;
+        width: 30%;
+     }
+     h1 {
+        color: #03cc0e;
+        font-size: 40px;
+        margin: 22px 0;
+        align-self: center;
+     }
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 21px 0;
+}

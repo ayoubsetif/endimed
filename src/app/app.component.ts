@@ -7,7 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-//import { LiveAnnouncer } from '@angular/cdk/a11y';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-root',
@@ -61,7 +61,6 @@ export class AppComponent {
   }
 
   delete(index: any) {
-    console.log('index', index)
     this.invoice.splice(index, 1);
     localStorage.setItem('config', JSON.stringify(this.invoice));
     //this.dataSource = this.invoice;
@@ -71,6 +70,21 @@ export class AppComponent {
 
   getTotal(type: string) {
     return this.invoice.map((t: any) => t[type]).reduce((acc: number, value: number) => +acc + +value, 0);
+  }
+
+  download() {
+    const facture = [];
+		this.invoice.forEach((f: any) => {
+			facture.push([f['agence'],f['dateFacture'],f['numeroFacture'],f['dateReception'],+f['montantHT'],+f['TVA'],+f['montantRist'],
+      +f['montantNet'],+f['montantBrut'],+f['SHP'],+f['montantPPA'],f['fournisseurs'],f['bordreauxNumber'],+f['marge'],f['echeance']])
+		});
+    facture.unshift(['Agence', 'Date Facture', 'N°Facture', 'Date Réception', 'Montant HT','T.V.A','Montant Rist','Montant Net',
+        'Montant Brut','Shp','Montant PPA','FOURNISSEURS','BORDREAUX N°','MARGE','ECHEANCE']);
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(facture);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  
+    XLSX.writeFile(wb, `facturation.xlsx`);
   }
 
 }
