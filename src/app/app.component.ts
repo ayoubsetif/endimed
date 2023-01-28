@@ -72,6 +72,11 @@ export class AppComponent {
     return this.invoice.map((t: any) => t[type]).reduce((acc: number, value: number) => +acc + +value, 0);
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   download() {
     const facture = [];
 		this.invoice.forEach((f: any) => {
