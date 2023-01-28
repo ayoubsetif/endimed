@@ -44,20 +44,52 @@ export class AppComponent {
     this.dataSource.sort = this.sort;
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(FacrureFormDialogComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      if (result) {
-        this.invoice.push(result)
-        //this.dataSource = this.invoice;
-        this.dataSource = new MatTableDataSource(this.invoice)
-        localStorage.setItem('config', JSON.stringify(this.invoice));
-      
-        this.table.renderRows();
-      }
-    });
+  openDialog(element?: any): void {
+    if(element) {
+      const dialogRef = this.dialog.open(FacrureFormDialogComponent, { data: element });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed', result);
+        if (result) {
+          this.invoice.find((f: any) => {
+            if(f['id'] === result['id']) {
+              console.log('eeee', f)
+              f['agence'] = result['agence'];
+              f['dateFacture'] = result['dateFacture'];
+              f['numeroFacture'] = result['numeroFacture'];
+              f['montantHT'] = result['montantHT'];
+              f['dateReception'] = result['dateReception'];
+              f['montantRist'] = result['montantRist'];
+              f['TVA'] = result['TVA'];
+              f['montantBrut'] = result['montantBrut'];
+              f['SHP'] = result['SHP'];
+              f['fournisseurs'] = result['fournisseurs'];
+              f['bordreauxNumber'] = result['bordreauxNumber'];
+              f['echeance'] = result['echeance'];
+              f['marge'] = result['marge'];
+              f['montantNet'] = result['montantNet'];
+              f['montantPPA'] = result['montantPPA'];
+            }
+          })
+          this.dataSource = new MatTableDataSource(this.invoice)
+          localStorage.setItem('config', JSON.stringify(this.invoice));
+          this.table.renderRows();
+        }
+      });
+    } else {
+      const dialogRef = this.dialog.open(FacrureFormDialogComponent);
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed', result);
+        if (result) {
+          this.invoice.push(result)
+          //this.dataSource = this.invoice;
+          this.dataSource = new MatTableDataSource(this.invoice)
+          localStorage.setItem('config', JSON.stringify(this.invoice));
+        
+          this.table.renderRows();
+        }
+      });
+    }
   }
 
   delete(index: any) {

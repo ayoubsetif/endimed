@@ -44,3 +44,11 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
     justify-content: space-between;
     margin: 21px 0;
 }
+
+a {
+    text-decoration: underline;
+    color: blue;
+}
+a:hover {
+  cursor : pointer; 
+}

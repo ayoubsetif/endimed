@@ -33,10 +33,28 @@ export class FacrureFormDialogComponent implements OnInit {
     }
   
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    if(this.data) {
+      this.FacureForm = new FormGroup({
+        agence: new FormControl(this.data['agence']),
+        dateFacture: new FormControl(this.data['dateFacture']),
+        numeroFacture: new FormControl(this.data['numeroFacture']),
+        montantHT: new FormControl(this.data['montantHT']),
+        dateReception: new FormControl(this.data['dateReception']),
+        montantRist: new FormControl(this.data['montantRist']),
+        TVA: new FormControl(this.data['TVA'], [ Validators.required ]),
+        montantBrut: new FormControl(this.data['montantBrut']),
+        SHP: new FormControl(this.data['SHP']),
+        fournisseurs: new FormControl(this.data['fournisseurs']),
+        bordreauxNumber: new FormControl(this.data['bordreauxNumber']),
+        echeance: new FormControl(this.data['echeance'])
+      });
+    }
+  }
 
   save() {
     return {
+      id: this.data ? this.data['id'] : new Date().getTime(),
       agence: this.FacureForm.controls['agence'].value,
       dateFacture: this.FacureForm.controls['dateFacture'].value,
       numeroFacture: this.FacureForm.controls['numeroFacture'].value,
@@ -52,7 +70,7 @@ export class FacrureFormDialogComponent implements OnInit {
       bordreauxNumber: this.FacureForm.controls['bordreauxNumber'].value,
       marge: (<any>+this.FacureForm.controls['montantBrut'].value + +this.FacureForm.controls['SHP'].value) / ((+this.FacureForm.controls['montantHT'].value as any  + +this.FacureForm.controls['TVA'].value) - <any>+this.FacureForm.controls['montantRist'].value),
       echeance: this.FacureForm.controls['echeance'].value,
-    }
+    } 
   }
 
   onNoClick(): void {
