@@ -1,11 +1,15 @@
 <div class="logo-container">
   <h1>المؤسسة الوطنية لتوزيع الأدوية بالتجزئة</h1>
-  <img src="../assets/logo.jpeg" alt="">
+  <img src="/assets/logo.jpeg" alt="">
 </div>
 
 <div class="btn-container">
   <button mat-raised-button type="submit" color="primary" (click)="openDialog()">Ajouter facture</button>
-  <button mat-raised-button type="submit" color="primary" (click)="download()">Télécharger en Excel</button>
+  <div>
+    <button mat-raised-button type="submit" color="primary" (click)="download()">Télécharger en Excel</button>
+    <input hidden  type='file' #btn accept=".xlsx" (change)="upload($event)">
+  	<button mat-raised-button	color="accent"	(click)="btn.click()"	>export</button>
+  </div>
 </div>
 
 <mat-form-field>

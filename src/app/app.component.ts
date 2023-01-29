@@ -18,6 +18,8 @@ export class AppComponent {
   columns = columns;
   invoice: any = [];
   dataSource: any = [];
+  file: File;
+	arrayBuffer: any;
 
   displayedColumns: string[] = ['position', 'agence', 'dateFacture', 'numeroFacture', 'dateReception' , 'montantHT', 'TVA','montantRist',
   'montantNet','montantBrut','SHP','montantPPA','fournisseurs','bordreauxNumber','marge','echeance', 'delete'];
@@ -52,7 +54,6 @@ export class AppComponent {
         if (result) {
           this.invoice.find((f: any) => {
             if(f['id'] === result['id']) {
-              console.log('eeee', f)
               f['agence'] = result['agence'];
               f['dateFacture'] = result['dateFacture'];
               f['numeroFacture'] = result['numeroFacture'];
@@ -123,6 +124,63 @@ export class AppComponent {
   
     XLSX.writeFile(wb, `facturation.xlsx`);
   }
+
+  upload(event: any) {
+    this.file = event.target.files[0];
+    console.log('file', this.file)
+		if (this.file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+			// this.snackBar.open('Wrong File Type', 'Ok', { duration : 7000 });
+		} else {
+			const fileReader = new FileReader();
+			fileReader.onload = (e) => {
+				const worksheet = this.readFile(fileReader);
+				const arr = XLSX.utils.sheet_to_json(worksheet, {raw: true });
+        const invoices : any[]= [];
+        let i = 123;
+
+        arr.forEach((el: any) => {
+          console.log('elll', el['Agence'])
+          const invoice = {
+            id: new Date().getTime() + i++ ,
+            agence: el['Agence'],
+            dateFacture: el['Date Facture'],
+            numeroFacture : el['N°Facture'],
+            montantHT : el['Montant HT'],
+            dateReception : el['Date Réception'],
+            montantRist: el['Montant Rist'],
+            TVA: el['T.V.A'],
+            montantBrut: el['Montant Brut'],
+            SHP: el['Shp'],
+            fournisseurs: el['FOURNISSEURS'],
+            bordreauxNumber: el['BORDREAUX N°'],
+            echeance: el['ECHEANCE'],
+            marge:el['MARGE'],
+            montantNet: el['Montant Net'],
+            montantPPA: el['Montant PPA']
+          }
+          invoices.push(invoice);
+        })
+        this.invoice = invoices;
+        this.dataSource = new MatTableDataSource(this.invoice)
+        localStorage.setItem('config', JSON.stringify(this.invoice));
+        this.table.renderRows();
+        location.reload();
+			};
+			fileReader.readAsArrayBuffer(this.file);
+		}
+  }
+
+  readFile(fileReader: any) {
+		this.arrayBuffer = fileReader.result;
+		const data = new Uint8Array(this.arrayBuffer);
+		const arr = new Array();
+		for (let i = 0; i !== data.length; ++i) { arr[i] = String.fromCharCode(data[i]); }
+		const bstr = arr.join('');
+    
+		const workbook = XLSX.read(bstr, {type: 'binary'});
+		const first_sheet_name = workbook.SheetNames[0];
+		return workbook.Sheets[first_sheet_name];
+	}
 
 }
 

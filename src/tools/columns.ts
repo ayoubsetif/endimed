@@ -27,6 +27,6 @@ export const formOptions: {id: string, name: string, type: string, required: boo
     { id: 'montantBrut', name: 'Montant Brut', type: 'number', required: true },
     { id: 'SHP', name: 'Shp', type: 'number', required: true },
     { id: 'fournisseurs', name: 'FOURNISSEURS', type: 'text', required: true },
-    { id: 'bordreauxNumber', name: ' BORDREAUX N°', type: 'number', required: false },
+    { id: 'bordreauxNumber', name: ' BORDREAUX N°', type: 'text', required: false },
     { id: 'echeance', name: 'ECHEANCE', type: 'text', required: false }
   ];
