@@ -1,11 +1,21 @@
 <form [formGroup]="FacureForm">
+  <mat-form-field  appearance="fill">
+    <mat-label> Agence </mat-label>
+    <input type="text" matInput formControlName="agence" [matAutocomplete]="auto" required>
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
     <mat-form-field *ngFor="let item of formOptions" appearance="fill">
       <mat-label>{{ item.name }}</mat-label>
       <input [type]="item.type" matInput [formControlName]="item.id" [required]="item.required">
     </mat-form-field>
   </form>
   
-  <button *ngIf="!data" mat-raised-button type="submit" color="primary" [disabled]="FacureForm.invalid" [mat-dialog-close]="save()">Ajouter</button>
-  <button *ngIf="data" mat-raised-button type="submit" color="primary" [disabled]="FacureForm.invalid" [mat-dialog-close]="save()">modifier</button>
+  <button *ngIf="data.type === 'add'" mat-raised-button type="submit" color="primary" [disabled]="FacureForm.invalid" [mat-dialog-close]="save()">Ajouter</button>
+  <button *ngIf="data.type === 'update'" mat-raised-button type="submit" color="primary" [disabled]="FacureForm.invalid" [mat-dialog-close]="save()">modifier</button>
 
   

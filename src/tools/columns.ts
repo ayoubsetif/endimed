@@ -17,7 +17,7 @@ export const columns: {id: string, name: string, type: string, required: boolean
   ];
 
 export const formOptions: {id: string, name: string, type: string, required: boolean}[] = [
-    { id: 'agence', name: 'Agence', type: 'text', required: true },
+    //{ id: 'agence', name: 'Agence', type: 'text', required: true },
     { id: 'dateFacture', name: 'Date Facture', type: 'date', required: true },
     { id: 'numeroFacture', name: 'N°Facture', type: 'text', required: true },
     { id: 'dateReception', name: 'Date Réception', type: 'date', required: true },

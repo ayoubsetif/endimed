@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
     MatDialogModule,
     MatIconModule,
     HttpClientModule,
-    MatSortModule
+    MatSortModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent]

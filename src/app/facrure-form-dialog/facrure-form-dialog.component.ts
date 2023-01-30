@@ -3,6 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { formOptions } from '../../tools/columns';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-facrure-form-dialog',
@@ -25,33 +28,45 @@ export class FacrureFormDialogComponent implements OnInit {
     bordreauxNumber: new FormControl(''),
   });
   formOptions = formOptions;
-
+  agenceAutoComplete: string[] = [];
+  filteredOptions: Observable<string[]>;
+  
   constructor(
     public dialogRef: MatDialogRef<FacrureFormDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any ) {
-
-    }
+    @Inject(MAT_DIALOG_DATA) public data: any ) {  }
   
 
   ngOnInit(): void {
-    if(this.data) {
+    this.agenceAutoComplete = _.uniq(this.data.autocomplete);
+
+    if(this.data.type === 'update') {
       this.FacureForm = new FormGroup({
-        agence: new FormControl(this.data['agence']),
-        dateFacture: new FormControl(this.data['dateFacture']),
-        numeroFacture: new FormControl(this.data['numeroFacture']),
-        montantHT: new FormControl(this.data['montantHT']),
-        dateReception: new FormControl(this.data['dateReception']),
-        montantRist: new FormControl(this.data['montantRist']),
-        TVA: new FormControl(this.data['TVA'], [ Validators.required ]),
-        montantBrut: new FormControl(this.data['montantBrut']),
-        SHP: new FormControl(this.data['SHP']),
-        fournisseurs: new FormControl(this.data['fournisseurs']),
-        bordreauxNumber: new FormControl(this.data['bordreauxNumber'])
+        agence: new FormControl(this.data.data['agence']),
+        dateFacture: new FormControl(this.data.data['dateFacture']),
+        numeroFacture: new FormControl(this.data.data['numeroFacture']),
+        montantHT: new FormControl(this.data.data['montantHT']),
+        dateReception: new FormControl(this.data.data['dateReception']),
+        montantRist: new FormControl(this.data.data['montantRist']),
+        TVA: new FormControl(this.data.data['TVA'], [ Validators.required ]),
+        montantBrut: new FormControl(this.data.data['montantBrut']),
+        SHP: new FormControl(this.data.data['SHP']),
+        fournisseurs: new FormControl(this.data.data['fournisseurs']),
+        bordreauxNumber: new FormControl(this.data.data['bordreauxNumber'])
       });
+    } else {
+      //
     }
+
+    this.filteredOptions = this.FacureForm.controls['agence'].valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
   }
 
-  
+  _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.agenceAutoComplete.filter(option => option.toLowerCase().includes(filterValue));
+  }
 
   save() {
     return {

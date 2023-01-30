@@ -9,6 +9,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { config } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -47,9 +48,23 @@ export class AppComponent {
     this.dataSource.sort = this.sort;
   }
 
-  openDialog(element?: any): void {
-    if(element) {
-      const dialogRef = this.dialog.open(FacrureFormDialogComponent, { data: element });
+  openDialog(type: string, element?: any): void {
+    const agence = this.invoice.map((m: any) => m['agence']);
+    if(type === "add") {
+      const dialogRef = this.dialog.open(FacrureFormDialogComponent , { data: { autocomplete: agence , type: 'add' }, autoFocus: false} );
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed', result);
+        if (result) {
+          this.invoice.push(result)
+          //this.dataSource = this.invoice;
+          this.dataSource = new MatTableDataSource(this.invoice)
+          localStorage.setItem('config', JSON.stringify(this.invoice));
+        
+          this.table.renderRows();
+        }
+      });
+    }else { // update facture
+      const dialogRef = this.dialog.open(FacrureFormDialogComponent, { data: { autocomplete: agence, data: element, type: 'update'}, autoFocus: false });
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed', result);
         if (result) {
@@ -74,20 +89,6 @@ export class AppComponent {
           })
           this.dataSource = new MatTableDataSource(this.invoice)
           localStorage.setItem('config', JSON.stringify(this.invoice));
-          this.table.renderRows();
-        }
-      });
-    } else {
-      const dialogRef = this.dialog.open(FacrureFormDialogComponent);
-  
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed', result);
-        if (result) {
-          this.invoice.push(result)
-          //this.dataSource = this.invoice;
-          this.dataSource = new MatTableDataSource(this.invoice)
-          localStorage.setItem('config', JSON.stringify(this.invoice));
-        
           this.table.renderRows();
         }
       });
