@@ -50,8 +50,9 @@ export class AppComponent {
 
   openDialog(type: string, element?: any): void {
     const agence = this.invoice.map((m: any) => m['agence']);
+    const facture = this.invoice.map((m: any) => m['numeroFacture']);
     if(type === "add") {
-      const dialogRef = this.dialog.open(FacrureFormDialogComponent , { data: { autocomplete: agence , type: 'add' }, autoFocus: false} );
+      const dialogRef = this.dialog.open(FacrureFormDialogComponent , { data: { facture: facture, autocomplete: agence , type: 'add' }, autoFocus: false} );
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed', result);
         if (result) {
@@ -64,7 +65,7 @@ export class AppComponent {
         }
       });
     }else { // update facture
-      const dialogRef = this.dialog.open(FacrureFormDialogComponent, { data: { autocomplete: agence, data: element, type: 'update'}, autoFocus: false });
+      const dialogRef = this.dialog.open(FacrureFormDialogComponent, { data: { facture: facture, autocomplete: agence, data: element, type: 'update'}, autoFocus: false });
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed', result);
         if (result) {

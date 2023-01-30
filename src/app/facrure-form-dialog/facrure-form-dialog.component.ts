@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { formOptions } from '../../tools/columns';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
@@ -17,7 +17,7 @@ export class FacrureFormDialogComponent implements OnInit {
   FacureForm = new FormGroup({
     agence: new FormControl(''),
     dateFacture: new FormControl(''),
-    numeroFacture: new FormControl(''),
+    numeroFacture: new FormControl('', [Validators.required, this.uniqueNameValidation(this.data.facture)]),
     montantHT: new FormControl(''),
     dateReception: new FormControl(''),
     montantRist: new FormControl(''),
@@ -38,12 +38,12 @@ export class FacrureFormDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.agenceAutoComplete = _.uniq(this.data.autocomplete);
-
+  
     if(this.data.type === 'update') {
       this.FacureForm = new FormGroup({
         agence: new FormControl(this.data.data['agence']),
         dateFacture: new FormControl(this.data.data['dateFacture']),
-        numeroFacture: new FormControl(this.data.data['numeroFacture']),
+        numeroFacture: new FormControl(this.data.data['numeroFacture'], [Validators.required, this.uniqueNameValidation(_.without(this.data.facture, this.data.data['numeroFacture']))]),
         montantHT: new FormControl(this.data.data['montantHT']),
         dateReception: new FormControl(this.data.data['dateReception']),
         montantRist: new FormControl(this.data.data['montantRist']),
@@ -56,11 +56,19 @@ export class FacrureFormDialogComponent implements OnInit {
     } else {
       //
     }
-
     this.filteredOptions = this.FacureForm.controls['agence'].valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
     );
+  }
+
+  errorMessage() {
+    if(this.FacureForm.controls['numeroFacture'].hasError('validateName')) {
+      return 'déja existe'
+    }
+    else {
+      return 'champs nécessaire'
+    }
   }
 
   _filter(value: string): string[] {
@@ -91,6 +99,18 @@ export class FacrureFormDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  uniqueNameValidation(names: string[]): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return !names.find((x) => x == control.value)
+        ? null
+        : {
+            validateName: {
+              valid: false,
+            },
+          };
+    };
   }
 
 }

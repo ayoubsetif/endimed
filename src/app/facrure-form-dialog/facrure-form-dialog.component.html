@@ -12,6 +12,9 @@
     <mat-form-field *ngFor="let item of formOptions" appearance="fill">
       <mat-label>{{ item.name }}</mat-label>
       <input [type]="item.type" matInput [formControlName]="item.id" [required]="item.required">
+      <mat-error *ngIf="item.id === 'numeroFacture' && [item.id]invalid">
+        {{errorMessage()}}
+      </mat-error>
     </mat-form-field>
   </form>
   
