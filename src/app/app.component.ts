@@ -8,6 +8,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as XLSX from 'xlsx';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -94,11 +95,15 @@ export class AppComponent {
   }
 
   delete(index: any) {
-    this.invoice.splice(index, 1);
-    localStorage.setItem('config', JSON.stringify(this.invoice));
-    //this.dataSource = this.invoice;
-    this.dataSource = new MatTableDataSource(this.invoice)
-    this.table.renderRows();
+    const dialogRef = this.dialog.open(DeleteDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.invoice.splice(index, 1);
+        localStorage.setItem('config', JSON.stringify(this.invoice));
+        this.dataSource = new MatTableDataSource(this.invoice)
+        this.table.renderRows();
+      }
+    });
   }
 
   getTotal(type: string) {

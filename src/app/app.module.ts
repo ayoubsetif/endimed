@@ -14,10 +14,13 @@ import { FacrureFormDialogComponent } from './facrure-form-dialog/facrure-form-d
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
-    FacrureFormDialogComponent
+    FacrureFormDialogComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
