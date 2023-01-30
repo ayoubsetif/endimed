@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { formOptions } from '../../tools/columns';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-facrure-form-dialog',
@@ -22,7 +23,6 @@ export class FacrureFormDialogComponent implements OnInit {
     SHP: new FormControl(''),
     fournisseurs: new FormControl(''),
     bordreauxNumber: new FormControl(''),
-    echeance: new FormControl('')
   });
   formOptions = formOptions;
 
@@ -46,11 +46,12 @@ export class FacrureFormDialogComponent implements OnInit {
         montantBrut: new FormControl(this.data['montantBrut']),
         SHP: new FormControl(this.data['SHP']),
         fournisseurs: new FormControl(this.data['fournisseurs']),
-        bordreauxNumber: new FormControl(this.data['bordreauxNumber']),
-        echeance: new FormControl(this.data['echeance'])
+        bordreauxNumber: new FormControl(this.data['bordreauxNumber'])
       });
     }
   }
+
+  
 
   save() {
     return {
@@ -69,7 +70,7 @@ export class FacrureFormDialogComponent implements OnInit {
       fournisseurs: this.FacureForm.controls['fournisseurs'].value,
       bordreauxNumber: this.FacureForm.controls['bordreauxNumber'].value,
       marge: (<any>+this.FacureForm.controls['montantBrut'].value + +this.FacureForm.controls['SHP'].value) / ((+this.FacureForm.controls['montantHT'].value as any  + +this.FacureForm.controls['TVA'].value) - <any>+this.FacureForm.controls['montantRist'].value),
-      echeance: this.FacureForm.controls['echeance'].value,
+      echeance: moment(this.FacureForm.controls['dateReception'].value).add(3, 'months').format('YYYY-MM-DD')
     } 
   }
 
