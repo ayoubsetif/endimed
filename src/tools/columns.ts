@@ -11,9 +11,9 @@ export const columns: {id: string, name: string, type: string, required: boolean
     { id: 'SHP', name: 'Shp', type: 'number', required: true },
     { id: 'montantPPA', name: 'Montant PPA', type: 'number', required: true },
     { id: 'fournisseurs', name: 'FOURNISSEURS', type: 'text', required: true },
-    { id: 'bordreauxNumber', name: ' BORDREAUX N°', type: 'text', required: false },
-    { id: 'marge', name: 'MARGE', type: 'number', required: true},
-    { id: 'echeance', name: 'ECHEANCE', type: 'date', required: false }
+    //{ id: 'bordreauxNumber', name: ' BORDREAUX N°', type: 'text', required: false },
+    //{ id: 'marge', name: 'MARGE', type: 'number', required: true},
+    //{ id: 'echeance', name: 'ECHEANCE', type: 'date', required: false }
   ];
 
 export const formOptions: {id: string, name: string, type: string, required: boolean}[] = [

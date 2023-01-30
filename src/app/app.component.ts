@@ -22,7 +22,7 @@ export class AppComponent {
 	arrayBuffer: any;
 
   displayedColumns: string[] = ['position', 'agence', 'dateFacture', 'numeroFacture', 'dateReception' , 'montantHT', 'TVA','montantRist',
-  'montantNet','montantBrut','SHP','montantPPA','fournisseurs','bordreauxNumber','marge','echeance', 'delete'];
+  'montantNet','montantBrut','SHP','montantPPA','fournisseurs', 'delete'];
 
   constructor(public dialog: MatDialog, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon(
