@@ -1,5 +1,7 @@
 table {
+    margin-top: 15px;
     width: 100%;
+    background-color: #efefef;
 }
 
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
@@ -43,6 +45,9 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
     display: flex;
     justify-content: space-between;
     margin: 21px 0;
+    button {
+        margin-right: 10px;
+    }
 }
 
 a {
@@ -51,4 +56,13 @@ a {
 }
 a:hover {
   cursor : pointer; 
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    .mat-form-field, button {
+        margin-right: 10px;
+    }
+
 }

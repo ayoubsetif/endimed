@@ -4,8 +4,10 @@
 </div>
 
 <div class="btn-container">
-  <button mat-raised-button type="submit" color="primary" (click)="openDialog('add')">Ajouter facture</button>
-  <button mat-raised-button type="submit" color="primary" (click)="openAgenceDialog()">Ajouter Agence</button>
+  <div>
+    <button mat-raised-button type="submit" color="primary" (click)="openDialog('add')">Ajouter facture</button>
+    <button mat-raised-button type="submit" color="primary" (click)="openAgenceDialog()">Ajouter Agence</button>
+  </div>
 
   <div>
     <button mat-raised-button type="submit" color="primary" (click)="download()">Télécharger en Excel</button>
@@ -14,7 +16,7 @@
   </div>
 </div>
 
-<form [formGroup]="searchForm">
+<form class="search" [formGroup]="searchForm">
   <mat-form-field appearance="fill">
     <mat-label>Agence</mat-label>
     <mat-select formControlName="agence">
@@ -35,14 +37,15 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Date de début</mat-label>
+  <mat-form-field class="date-style" appearance="fill">
+    
     <input matInput datePickerFormat="DD/MM/YYYY" formControlName="startDate" [matDatepicker]="picker">
+    <mat-label>Date de debut</mat-label>
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field class="date-style" appearance="fill">
     <mat-label>Date de fin</mat-label>
     <input matInput datePickerFormat="DD/MM/YYYY" formControlName="endDate" [matDatepicker]="pickerr">
     <mat-datepicker-toggle matIconSuffix [for]="pickerr"></mat-datepicker-toggle>

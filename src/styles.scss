@@ -1,8 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: #efefef;
+}
 
-.mat-form-field-infix {
-    display: flex !important;
+
+.date-style {
+    .mat-form-field-infix {
+        display: flex !important;
+        height: 48px;
+        padding: 0;
+    }
+    .mat-form-field-wrapper {
+        padding-bottom: 0;
+    }
+    input.mat-input-element {
+        margin-top: -2em;
+    }
+    .mat-datepicker-toggle {
+        margin-top: -1em;
+    }
 }
