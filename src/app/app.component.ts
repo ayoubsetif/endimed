@@ -9,7 +9,10 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
-import { config } from 'rxjs';
+import { AgenceDialogComponent } from './agence-dialog/agence-dialog.component';
+import { FormGroup, FormControl } from '@angular/forms';
+import * as moment from 'moment';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-root',
@@ -22,9 +25,17 @@ export class AppComponent {
   dataSource: any = [];
   file: File;
 	arrayBuffer: any;
+  agenceList: string[] = [];
 
   displayedColumns: string[] = ['position', 'agence', 'dateFacture', 'numeroFacture', 'dateReception' , 'montantHT', 'TVA','montantRist',
   'montantNet','montantBrut','SHP','montantPPA','fournisseurs', 'delete'];
+  
+  searchForm = new FormGroup({
+    startDate: new FormControl(''),
+    endDate: new FormControl(''),
+    agence: new FormControl(''),
+    fournisseur: new FormControl('')
+  });
 
   constructor(public dialog: MatDialog, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     iconRegistry.addSvgIcon(
@@ -42,22 +53,27 @@ export class AppComponent {
     } else {
       this.invoice = [];
     }
+    if(JSON.parse(localStorage.getItem('agenceList'))) {
+      this.agenceList = JSON.parse(localStorage.getItem('agenceList'));
+    }
 	}
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
 
+  returnFournisseurList() {
+    return this.invoice.map((m: any) => m['fournisseurs']);
+  }
+
   openDialog(type: string, element?: any): void {
-    const agence = this.invoice.map((m: any) => m['agence']);
     const facture = this.invoice.map((m: any) => m['numeroFacture']);
     if(type === "add") {
-      const dialogRef = this.dialog.open(FacrureFormDialogComponent , { data: { facture: facture, autocomplete: agence , type: 'add' }, autoFocus: false} );
+      const dialogRef = this.dialog.open(FacrureFormDialogComponent , { data: { facture: facture, autocomplete: this.agenceList , type: 'add' }, autoFocus: false} );
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed', result);
         if (result) {
           this.invoice.push(result)
-          //this.dataSource = this.invoice;
           this.dataSource = new MatTableDataSource(this.invoice)
           localStorage.setItem('config', JSON.stringify(this.invoice));
         
@@ -65,7 +81,7 @@ export class AppComponent {
         }
       });
     }else { // update facture
-      const dialogRef = this.dialog.open(FacrureFormDialogComponent, { data: { facture: facture, autocomplete: agence, data: element, type: 'update'}, autoFocus: false });
+      const dialogRef = this.dialog.open(FacrureFormDialogComponent, { data: { facture: facture, autocomplete: this.agenceList, data: element, type: 'update'}, autoFocus: false });
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed', result);
         if (result) {
@@ -96,6 +112,18 @@ export class AppComponent {
     }
   }
 
+  openAgenceDialog() {
+    const dialogRef = this.dialog.open(AgenceDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if(result && result.length) {
+        console.log('result add agence', result)
+        this.agenceList = _.uniq(_.concat(result, this.agenceList))
+        localStorage.setItem('agenceList', JSON.stringify(this.agenceList));
+      }
+      console.log('agence', this.agenceList)
+    });
+  }
+
   delete(index: any) {
     const dialogRef = this.dialog.open(DeleteDialogComponent);
     dialogRef.afterClosed().subscribe(result => {
@@ -109,12 +137,50 @@ export class AppComponent {
   }
 
   getTotal(type: string) {
-    return this.invoice.map((t: any) => t[type]).reduce((acc: number, value: number) => +acc + +value, 0);
+    return this.dataSource.filteredData.map((t: any) => t[type]).reduce((acc: number, value: number) => +acc + +value, 0);
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  search() {
+    const startDate = this.searchForm.controls['startDate'].value ? moment(this.searchForm.controls['startDate'].value).format('YYYY-MM-DD') : moment('1980-12-31').format("YYYY-MM-DD");
+    const endDate = this.searchForm.controls['endDate'].value ? moment(this.searchForm.controls['endDate'].value).format('YYYY-MM-DD') : moment('9999-12-31').format("YYYY-MM-DD");
+    const agence = this.searchForm.controls['agence'].value;
+    const fournisseur = this.searchForm.controls['fournisseur'].value;
+
+    const factures = [...this.invoice];
+    let filterd: any[]= [];
+    if(!this.searchForm.controls['startDate'].value && !this.searchForm.controls['endDate'].value && !this.searchForm.controls['agence'].value && !this.searchForm.controls['fournisseur'].value) {
+      filterd = [...this.invoice]
+    } else {
+      factures.forEach(fac => {
+        if(fac['dateFacture'] >= startDate && fac['dateFacture'] <= endDate) {
+         if(!agence && !fournisseur) {
+          filterd.push(fac)
+         } else {
+          if(fac['fournisseurs'] === fournisseur && fac['agence'] == agence) {
+            filterd.push(fac)
+          } else {
+            if(!fournisseur && fac['agence'] == agence) {
+              filterd.push(fac)
+            }
+            if(!agence && fac['fournisseurs'] === fournisseur) {
+              filterd.push(fac)
+            }
+          }
+         }
+        } else {
+          //
+        }
+      })
+    }
+    this.dataSource = new MatTableDataSource(filterd)
+    this.table.renderRows();
+  }
+
+  reset() {
+    // reinitialiser les formulaire
+    this.searchForm.reset();
+    this.dataSource = new MatTableDataSource(this.invoice)
+    this.table.renderRows();
   }
 
   download() {

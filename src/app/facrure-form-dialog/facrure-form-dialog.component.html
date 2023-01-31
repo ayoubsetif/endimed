@@ -1,12 +1,12 @@
 <form [formGroup]="FacureForm">
-  <mat-form-field  appearance="fill">
-    <mat-label> Agence </mat-label>
-    <input type="text" matInput formControlName="agence" [matAutocomplete]="auto" required>
-    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+  <mat-form-field appearance="fill">
+    <mat-label>Agence</mat-label>
+    <mat-select formControlName="agence" required>
+      <mat-option>--</mat-option>
       <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
         {{option}}
       </mat-option>
-    </mat-autocomplete>
+    </mat-select>
   </mat-form-field>
 
     <mat-form-field *ngFor="let item of formOptions" appearance="fill">

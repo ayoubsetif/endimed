@@ -16,12 +16,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { AgenceDialogComponent } from './agence-dialog/agence-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
     AppComponent,
     FacrureFormDialogComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    AgenceDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -35,9 +41,14 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatIconModule,
     HttpClientModule,
     MatSortModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

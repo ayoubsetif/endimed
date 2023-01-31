@@ -1,0 +1,12 @@
+<mat-form-field appearance="fill">
+    <mat-label>Agence</mat-label>
+    <input type="text" matInput [formControl]="agence" required>
+</mat-form-field>
+<ul>
+    <li *ngFor="let agence of agences" > {{ agence }}</li>
+</ul>
+
+<button mat-raised-button type="submit" color="primary" [disabled]="agence.invalid" (click)="add()">Ajouter Agence</button>
+
+<button mat-raised-button type="submit" color="primary" [mat-dialog-close]="save()">Fermer</button>
+

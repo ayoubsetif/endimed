@@ -78,7 +78,7 @@ export class FacrureFormDialogComponent implements OnInit {
 
   save() {
     return {
-      id: this.data ? this.data['id'] : new Date().getTime(),
+      id: this.data.data ? this.data.data['id'] : new Date().getTime(),
       agence: this.FacureForm.controls['agence'].value,
       dateFacture: this.FacureForm.controls['dateFacture'].value,
       numeroFacture: this.FacureForm.controls['numeroFacture'].value,

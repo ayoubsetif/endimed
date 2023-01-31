@@ -5,6 +5,8 @@
 
 <div class="btn-container">
   <button mat-raised-button type="submit" color="primary" (click)="openDialog('add')">Ajouter facture</button>
+  <button mat-raised-button type="submit" color="primary" (click)="openAgenceDialog()">Ajouter Agence</button>
+
   <div>
     <button mat-raised-button type="submit" color="primary" (click)="download()">Télécharger en Excel</button>
     <input hidden  type='file' #btn accept=".xlsx" (change)="upload($event)">
@@ -12,9 +14,44 @@
   </div>
 </div>
 
-<mat-form-field>
-  <mat-label>Recherche</mat-label><input matInput (keyup)="applyFilter($event)"  #input>
-</mat-form-field>
+<form [formGroup]="searchForm">
+  <mat-form-field appearance="fill">
+    <mat-label>Agence</mat-label>
+    <mat-select formControlName="agence">
+      <mat-option>--</mat-option>
+      <mat-option *ngFor="let option of agenceList" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Fournisseur</mat-label>
+    <mat-select formControlName="fournisseur">
+      <mat-option>--</mat-option>
+      <mat-option *ngFor="let option of returnFournisseurList()" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Date de début</mat-label>
+    <input matInput datePickerFormat="DD/MM/YYYY" formControlName="startDate" [matDatepicker]="picker">
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Date de fin</mat-label>
+    <input matInput datePickerFormat="DD/MM/YYYY" formControlName="endDate" [matDatepicker]="pickerr">
+    <mat-datepicker-toggle matIconSuffix [for]="pickerr"></mat-datepicker-toggle>
+    <mat-datepicker #pickerr></mat-datepicker>
+  </mat-form-field>
+
+  <button mat-raised-button type="submit" color="primary" (click)="search()">rechercher</button>
+  <button mat-raised-button type="submit" color="primary" (click)="reset()">Réinitialiser</button>
+</form>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
@@ -42,6 +79,6 @@
   <tr mat-footer-row *matFooterRowDef="displayedColumns" class="en-footer"></tr>
 
   <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="4">Pas de données pour"{{input.value}}"</td>
+    <td class="mat-cell" colspan="4">Pas de données </td>
   </tr>
 </table>
