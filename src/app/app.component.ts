@@ -47,7 +47,7 @@ export class AppComponent {
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(JSON.parse(localStorage.getItem('config') as any))
+    this.dataSource = new MatTableDataSource(JSON.parse(localStorage.getItem('config') as any));
     if(JSON.parse(localStorage.getItem('config') as any)) {
       this.invoice = JSON.parse(localStorage.getItem('config') as any);
     } else {
@@ -59,7 +59,7 @@ export class AppComponent {
 	}
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
+   // this.dataSource.sort = this.sort;
   }
 
   returnFournisseurList() {
@@ -137,7 +137,11 @@ export class AppComponent {
   }
 
   getTotal(type: string) {
-    return this.dataSource.filteredData.map((t: any) => t[type]).reduce((acc: number, value: number) => +acc + +value, 0);
+    if(this.dataSource.filteredData) {
+      return this.dataSource.filteredData.map((t: any) => t[type]).reduce((acc: number, value: number) => +acc + +value, 0);
+    } else {
+      return 0;
+    }
   }
 
   search() {
