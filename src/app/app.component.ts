@@ -136,6 +136,41 @@ export class AppComponent {
     });
   }
 
+  printRecap() {
+    const data = [...this.dataSource.filteredData];
+    const recap = [];
+    const grouped = _.groupBy(data, 'agence');
+    recap.push(['Agence','Montant HT','Montant Net', 'Montant Brut','Montant PPA']);
+    
+    Object.keys(grouped).forEach(e => {
+        const aon = grouped[e].map(p => p['montantHT']);
+				const sumHT = _.reduce(aon, function(a, b) { return a + b; }, 0);
+
+        const aonNet = grouped[e].map(p => p['montantNet']);
+				const sumNet = _.reduce(aonNet, function(a, b) { return a + b; }, 0);
+
+        const aonPPA = grouped[e].map(p => p['montantPPA']);
+				const sumPPA = _.reduce(aonPPA, function(a, b) { return a + b; }, 0);
+
+        const aonBrut = grouped[e].map(p => p['montantBrut']);
+				const sumBrut = _.reduce(aonBrut, function(a, b) { return a + b; }, 0);
+
+				recap.push([e,  sumHT, sumNet, sumBrut, sumPPA ])
+		});
+
+    const sumHT = _.reduce(<any>_.tail(recap.map(m => m[1])), function(a, b) { return a + b; }, 0);
+    const sumNet = _.reduce(<any>_.tail(recap.map(m => m[2])), function(a, b) { return a + b; }, 0);
+    const sumBrut= _.reduce(<any>_.tail(recap.map(m => m[3])), function(a, b) { return a + b; }, 0);
+    const sumPPA = _.reduce(<any>_.tail(recap.map(m => m[4])), function(a, b) { return a + b; }, 0);
+    recap.push(['Total',sumHT, sumNet, sumBrut, sumPPA])
+
+		const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(recap);
+		const wb: XLSX.WorkBook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		
+		XLSX.writeFile(wb, `recap.xlsx`);
+  }
+
   getTotal(type: string) {
     if(this.dataSource.filteredData) {
       return this.dataSource.filteredData.map((t: any) => t[type]).reduce((acc: number, value: number) => +acc + +value, 0);
